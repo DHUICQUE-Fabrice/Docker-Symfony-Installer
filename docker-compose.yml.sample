@@ -3,7 +3,7 @@ version: '3.8'
 services:
   db:
     image: mysql
-    container_name: db_PROJECTNAME_dev
+    container_name: db_PROJECTNAME
     restart: always
     volumes:
       - db-data:/var/lib/mysql
@@ -17,7 +17,7 @@ services:
 
   maildev:
     image: maildev/maildev
-    container_name: maildev_PROJECTNAME_dev
+    container_name: maildev_PROJECTNAME
     command: bin/maildev --web 80 --smtp 25 --hide-extensions STARTTLS
     ports:
       - "8081:80"
@@ -27,7 +27,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin
-    container_name: phpmyadmin_PROJECTNAME_dev
+    container_name: phpmyadmin_PROJECTNAME
     restart: always
     depends_on:
       - db
@@ -40,7 +40,7 @@ services:
 
   www:
     build: docker
-    container_name: www_PROJECTNAME_dev
+    container_name: www_PROJECTNAME
     restart: always
     ports:
       - "8000:80"
