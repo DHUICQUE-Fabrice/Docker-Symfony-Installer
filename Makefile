@@ -12,7 +12,7 @@ NOTSETERROR="is not set in Makefile.conf"
 GREEN = /bin/echo -e "\x1b[32m\#\# $1\x1b[0m"
 RED = /bin/echo -e "\x1b[31m\#\# $1\x1b[0m"
 WHITEONRED = /bin/echo -e "\033[41m----- $1 -----\033[m"
-GREENBG = /bin/echo -e "\033[42m\033[37m\033[1m" 
+GREENBG = /bin/echo -e "\033[42m----- $1 -----\033[m"
 
 ## —— 🔥 Init a new symfony project ——
 check-config: ## Check if required variables are set in Makefile.conf
@@ -55,9 +55,9 @@ else
 	echo 'DATABASE_URL=$(DATABASE_URL)' >> ./project/.env.$(ENV)
 	$(COMPOSER) require vich/uploader-bundle
 	echo $(shell docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' www_$(PROJECTNAME)_$(ENV))	$(PROJECTNAME).test >> /etc/hosts
-	@$(call GREENBG,"Your project is ready at \033[4m\033[34mhttp://$(PROJECTNAME).test\033[0m")
-	@$(call GREENBG,"Your mailer is available at \033[4m\033[34mhttp://127.0.0.1:$(MAILPORT)\033[0m")
-	@$(call GREENBG,"Your PhpMyAdmin is available at \033[4m\033[34mhttp://127.0.0.1:$(PHPMYADMINPORT)\033[0m")
+	@$(call GREENBG,"Your project is ready at http://$(PROJECTNAME).test")
+	@$(call GREENBG,"Your mailer is available at http://127.0.0.1:$(MAILPORT)")
+	@$(call GREENBG,"Your PhpMyAdmin is available at http://127.0.0.1:$(PHPMYADMINPORT)")
 endif
 
 get-ip:
