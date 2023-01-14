@@ -8,10 +8,10 @@ services:
     volumes:
       - db-data:/var/lib/mysql
     environment:
-      MYSQL_DATABASE: 'MaSuperBDD'
-      MYSQL_USER: 'Fabrice'
-      MYSQL_PASSWORD: 'Secter'
-      MYSQL_ROOT_PASSWORD: 'Az3rty!!'
+      MYSQL_DATABASE: 'DBNAME'
+      MYSQL_USER: 'DBUSER'
+      MYSQL_PASSWORD: 'DBPASS'
+      MYSQL_ROOT_PASSWORD: 'DBROOTPASS'
     networks:
       - dev
 
@@ -20,7 +20,7 @@ services:
     container_name: maildev_PROJECTNAME
     command: bin/maildev --web 80 --smtp 25 --hide-extensions STARTTLS
     ports:
-      - "8081:80"
+      - "MAILPORT:80"
     restart: always
     networks:
       - dev
@@ -32,7 +32,7 @@ services:
     depends_on:
       - db
     ports:
-      - "8080:80"
+      - "PHPMYADMINPORT:80"
     environment:
       PMA_HOST: db
     networks:
@@ -43,7 +43,7 @@ services:
     container_name: www_PROJECTNAME
     restart: always
     ports:
-      - "8000:80"
+      - "WWWPORT:80"
     volumes:
       - ./docker/vhosts:/etc/apache2/sites-enabled
       - ./:/var/www
