@@ -45,7 +45,7 @@ new-project: load-config check-config ## Create a new Symfony project
 ifneq ("$(shell id -u)", "0")
 	@$(call WHITEONRED,"You must be root to run this command. Please try with sudo.")
 else
-	sed 's/PROJECTNAME/$(PROJECTNAME)_$(ENV)/g; s/DBNAME/$(DBNAME)/g; s/DBUSER/$(DBUSER)/g; s/DBPASS/$(DBPASS)/g; s/DBPORT/$(DBPORT)/g; s/MAILPORT/$(MAILPORT)/g; s/PHPMYADMINPORT/$(PHPMYADMINPORT)/g; s/WWWPORT/$(WWWPORT)/g' docker-compose.yml.sample > docker-compose.yml
+	sed 's/PROJECTNAME/$(PROJECTNAME)_$(ENV)/g; s/DBNAME/$(DBNAME)/g; s/DBUSER/$(DBUSER)/g; s/DBPASS/$(DBPASS)/g; s/DBPORT/$(DBPORT)/g; s/DBROOTPASSWORD/$(DBROOTPASSWORD)/g; s/DBROOTEMAIL/$(DBROOTEMAIL)/g; s/MAILPORT/$(MAILPORT)/g; s/PHPMYADMINPORT/$(PHPMYADMINPORT)/g; s/WWWPORT/$(WWWPORT)/g' docker-compose.yml.sample > docker-compose.yml
 	sed 's/PROJECTNAME/$(PROJECTNAME)/g' docker/vhosts/vhosts.conf.sample > docker/vhosts/vhosts.conf
 	docker-compose up -d
 	$(EXECBIS) composer create-project symfony/website-skeleton project --no-interaction
