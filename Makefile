@@ -6,7 +6,7 @@ PHP = $(EXEC) php
 COMPOSER = $(EXEC) composer
 NPM = $(EXEC) npm
 SYMFONY_CONSOLE = $(PHP) bin/console
-DATABASE_URL= "postgres://$(DBUSER):$(DBPASS)@$db:$(DBPORT)/$(DBNAME)?serverVersion=5.7&charset=utf8mb4"
+DATABASE_URL= "mysql://$(DBUSER):$(DBPASS)@db:3306/$(DBNAME)?serverVersion=5.7&charset=utf8mb4"
 NOTSETERROR="is not set in Makefile.conf"
 # Colors
 GREEN = /bin/echo -e "\x1b[32m\#\# $1\x1b[0m"
