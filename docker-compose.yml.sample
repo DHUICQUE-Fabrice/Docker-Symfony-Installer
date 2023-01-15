@@ -2,17 +2,20 @@ version: '3.8'
 
 services:
     db:
-        image: postgres
+        image: mysql:5.7
         container_name: db_PROJECTNAME
         restart: always
         volumes:
             - db-data:/var/lib/potgresql/data
         ports:
-            - "DBPORT:5432"
+            - '3306:3306'
+        expose:
+            - '3306'
         environment:
-            POSTGRES_USER: 'DBUSER'
-            POSTGRES_PASSWORD: 'DBPASS'
-            POSTGRES_DB: 'DBNAME'
+            MYSQL_DATABASE: 'DBNAME'
+            MYSQL_USER: 'DBUSER'
+            MYSQL_PASSWORD: 'DBPASS'
+            MYSQL_ROOT_PASSWORD: 'DBROOTPASS'
         networks:
             - dev
 
@@ -26,15 +29,16 @@ services:
         networks:
             - dev
 
-    pgadmin:
-        image: dpage/pgadmin4
-        container_name: pgadmin_PROJECTNAME
+    phpmyadmin:
+        image: phpmyadmin
+        container_name: phpmyadmin_PROJECTNAME
         restart: always
+        depends_on:
+            - db
         ports:
-            - "PGADMINPORT:80"
+            - "PHPMYADMINPORT:80"
         environment:
-            PGADMIN_DEFAULT_EMAIL: DBROOTEMAIL
-            PGADMIN_DEFAULT_PASSWORD: DBROOTPASSWORD
+            PMA_HOST: db
         networks:
             - dev
 

@@ -6,7 +6,7 @@ PHP = $(EXEC) php
 COMPOSER = $(EXEC) composer
 NPM = $(EXEC) npm
 SYMFONY_CONSOLE = $(PHP) bin/console
-DATABASE_URL= "postgres://$(DBUSER):$(DBPASS)@$(PROJECTNAME).test:$(DBPORT)/$(DBNAME)?serverVersion=8&charset=utf8mb4"
+DATABASE_URL= "postgres://$(DBUSER):$(DBPASS)@$db:$(DBPORT)/$(DBNAME)?serverVersion=5.7&charset=utf8mb4"
 NOTSETERROR="is not set in Makefile.conf"
 # Colors
 GREEN = /bin/echo -e "\x1b[32m\#\# $1\x1b[0m"
@@ -45,7 +45,7 @@ new-project: load-config check-config ## Create a new Symfony project
 ifneq ("$(shell id -u)", "0")
 	@$(call WHITEONRED,"You must be root to run this command. Please try with sudo.")
 else
-	sed 's/PROJECTNAME/$(PROJECTNAME)_$(ENV)/g; s/DBNAME/$(DBNAME)/g; s/DBUSER/$(DBUSER)/g; s/DBPASS/$(DBPASS)/g; s/DBPORT/$(DBPORT)/g; s/DBROOTPASSWORD/$(DBROOTPASSWORD)/g; s/DBROOTEMAIL/$(DBROOTEMAIL)/g; s/MAILPORT/$(MAILPORT)/g; s/PGADMINPORT/$(PGADMINPORT)/g; s/WWWPORT/$(WWWPORT)/g' docker-compose.yml.sample > docker-compose.yml
+	sed 's/PROJECTNAME/$(PROJECTNAME)_$(ENV)/g; s/DBNAME/$(DBNAME)/g; s/DBUSER/$(DBUSER)/g; s/DBPASS/$(DBPASS)/g; s/DBROOTPASS/$(DBROOTPASS)/g; s/MAILPORT/$(MAILPORT)/g; s/PHPMYADMINPORT/$(PHPMYADMINPORT)/g; s/WWWPORT/$(WWWPORT)/g' docker-compose.yml.sample > docker-compose.yml
 	sed 's/PROJECTNAME/$(PROJECTNAME)/g' docker/vhosts/vhosts.conf.sample > docker/vhosts/vhosts.conf
 	docker-compose up -d
 	$(EXECBIS) composer create-project symfony/website-skeleton project --no-interaction
@@ -57,8 +57,9 @@ else
 	$(COMPOSER) require symfony/webpack-encore-bundle
 	$(NPM) install
 	$(NPM) run build
+	chown -R $(SUDO_USER) ./
 	echo $(shell docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' www_$(PROJECTNAME)_$(ENV))	$(PROJECTNAME).test >> /etc/hosts
-	@$(call GREENBG,"Your project is ready at http://$(PROJECTNAME).test")
+	@$(call GREENBG,"Your project is ready at http://127.0.0.1:$(WWWPORT)")
 	@$(call GREENBG,"Your mailer is available at http://127.0.0.1:$(MAILPORT)")
 	@$(call GREENBG,"Your PhpMyAdmin is available at http://127.0.0.1:$(PHPMYADMINPORT)")
 endif
