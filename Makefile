@@ -6,7 +6,7 @@ PHP = $(EXEC) php
 COMPOSER = $(EXEC) composer
 NPM = $(EXEC) npm
 SYMFONY_CONSOLE = $(PHP) bin/console
-DATABASE_URL= "mysql://$(DBUSER):$(DBPASS)@$(PROJECTNAME).test:3306/$(DBNAME)?serverVersion=8&charset=utf8mb4"
+DATABASE_URL= "postgres://$(DBUSER):$(DBPASS)@$(PROJECTNAME).test:$(DBPORT)/$(DBNAME)?serverVersion=8&charset=utf8mb4"
 NOTSETERROR="is not set in Makefile.conf"
 # Colors
 GREEN = /bin/echo -e "\x1b[32m\#\# $1\x1b[0m"
@@ -45,7 +45,7 @@ new-project: load-config check-config ## Create a new Symfony project
 ifneq ("$(shell id -u)", "0")
 	@$(call WHITEONRED,"You must be root to run this command. Please try with sudo.")
 else
-	sed 's/PROJECTNAME/$(PROJECTNAME)_$(ENV)/g; s/DBNAME/$(DBNAME)/g; s/DBUSER/$(DBUSER)/g; s/DBPASS/$(DBPASS)/g; s/DBROOTPASS/$(DBROOTPASS)/g; s/MAILPORT/$(MAILPORT)/g; s/PHPMYADMINPORT/$(PHPMYADMINPORT)/g; s/WWWPORT/$(WWWPORT)/g' docker-compose.yml.sample > docker-compose.yml
+	sed 's/PROJECTNAME/$(PROJECTNAME)_$(ENV)/g; s/DBNAME/$(DBNAME)/g; s/DBUSER/$(DBUSER)/g; s/DBPASS/$(DBPASS)/g; s/DBPORT/$(DBPORT)/g; s/MAILPORT/$(MAILPORT)/g; s/PHPMYADMINPORT/$(PHPMYADMINPORT)/g; s/WWWPORT/$(WWWPORT)/g' docker-compose.yml.sample > docker-compose.yml
 	sed 's/PROJECTNAME/$(PROJECTNAME)/g' docker/vhosts/vhosts.conf.sample > docker/vhosts/vhosts.conf
 	docker-compose up -d
 	$(EXECBIS) composer create-project symfony/website-skeleton project --no-interaction
