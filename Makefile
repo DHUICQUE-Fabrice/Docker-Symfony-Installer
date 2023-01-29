@@ -56,7 +56,6 @@ else
 	$(COMPOSER) require vich/uploader-bundle
 	$(COMPOSER) require symfony/webpack-encore-bundle
 	$(NPM) install
-	$(NPM) install axentix postcss autoprefixer postcss-loader
 	$(NPM) run build
 	chown -R $(SUDO_USER) ./
 	echo $(shell docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' www_$(PROJECTNAME)_$(ENV))	$(PROJECTNAME).test >> /etc/hosts
