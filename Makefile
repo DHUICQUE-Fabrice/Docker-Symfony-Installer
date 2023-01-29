@@ -5,6 +5,7 @@ EXECINIT = docker exec -w /var/www www_$(PROJECTNAME)_$(ENV)
 PHP = $(EXEC) php
 COMPOSER = $(EXEC) composer
 NPM = $(EXEC) npm
+NPX = $(EXEC) npx
 SYMFONY_CONSOLE = $(PHP) bin/console
 DATABASE_URL= "mysql://$(DBUSER):$(DBPASS)@db:3306/$(DBNAME)?serverVersion=5.7&charset=utf8mb4"
 NOTSETERROR="is not set in Makefile.conf"
@@ -55,7 +56,8 @@ else
 	echo 'DATABASE_URL=$(DATABASE_URL)' >> ./project/.env.$(ENV)
 	$(COMPOSER) require vich/uploader-bundle
 	$(COMPOSER) require symfony/webpack-encore-bundle
-	$(NPM) install
+	$(NPM) install -D tailwindcss postcss autoprefixer postcss-loader
+	$(NPX) tailwindcss init -p
 	$(NPM) run build
 	chown -R $(SUDO_USER) ./
 	echo $(shell docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' www_$(PROJECTNAME)_$(ENV))	$(PROJECTNAME).test >> /etc/hosts
