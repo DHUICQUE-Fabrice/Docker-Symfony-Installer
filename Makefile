@@ -56,7 +56,7 @@ else
 	$(COMPOSER) require vich/uploader-bundle
 	$(COMPOSER) require symfony/webpack-encore-bundle
 	$(NPM) install
-	$(NPM) install axentix
+	$(NPM) install axentix postcss autoprefixer postcss-loader
 	$(NPM) run build
 	chown -R $(SUDO_USER) ./
 	echo $(shell docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' www_$(PROJECTNAME)_$(ENV))	$(PROJECTNAME).test >> /etc/hosts
@@ -79,6 +79,23 @@ init: ## Init the project
 
 cache-clear: load-config ## Clear cache
 	$(SYMFONY_CONSOLE) cache:clear
+
+entity: load-config ## Shortcut to symfony console make:entity
+	$(SYMFONY_CONSOLE) make:entity $(NAME)
+
+migration: load-config ## Shortcut to symfony console make:migration
+	$(SYMFONY_CONSOLE) make:migration
+
+migrate: load-config ## Shortcut to symfony console doctrine:migrations:migrate
+	$(SYMFONY_CONSOLE) d:m:m --no-interaction
+
+fixtures: load-config ## Shortcut to symfony console doctrine:fixtures:load
+	$(SYMFONY_CONSOLE) d:f:l --no-interaction
+
+controller: load-config ## Shortcut to symfony console make:controller
+	$(SYMFONY_CONSOLE) make:controller $(NAME)
+
+
 
 ## —— ✅ Test ——
 .PHONY: tests
@@ -135,8 +152,11 @@ npm-install: load-config ## Install all npm dependencies
 npm-update: load-config ## Update all npm dependencies
 	$(NPM) update
 
-npm-watch: load-config ## Update all npm dependencies
+npm-watch: load-config ## Shortcut to npm run watch
 	$(NPM) run watch
+
+npm-build: load-config ## Shortcut to npm run build
+	$(NPM) run build
 
 ## —— 📊 Database ——
 database-init: load-config ## Init database
@@ -153,24 +173,6 @@ database-create: load-config ## Create database
 
 database-remove: load-config ## Drop database
 	$(SYMFONY_CONSOLE) d:d:d --force --if-exists
-
-database-migration: load-config ## Make migration
-	$(SYMFONY_CONSOLE) make:migration
-
-migration: load-config ## Alias : database-migration
-	$(MAKE) database-migration
-
-database-migrate: load-config ## Migrate migrations
-	$(SYMFONY_CONSOLE) d:m:m --no-interaction
-
-migrate: load-config ## Alias : database-migrate
-	$(MAKE) database-migrate
-
-database-fixtures-load: load-config ## Load fixtures
-	$(SYMFONY_CONSOLE) d:f:l --no-interaction
-
-fixtures: load-config ## Alias : database-fixtures-load
-	$(MAKE) database-fixtures-load
 
 ## —— 🛠️  Others ——
 help: load-config ## List of commands
