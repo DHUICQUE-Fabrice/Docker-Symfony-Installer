@@ -7,10 +7,6 @@ services:
         restart: always
         volumes:
             - db-data:/var/lib/potgresql/data
-        ports:
-            - '3306:3306'
-        expose:
-            - '3306'
         environment:
             MYSQL_DATABASE: 'DBNAME'
             MYSQL_USER: 'DBUSER'
